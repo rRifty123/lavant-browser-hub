@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lavant Web Browser Hub</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; display: flex; height: 100vh; background: #121214; color: #fff; }
+    #sidebar { width: 320px; background: #1a1a1e; display: flex; flex-direction: column; border-right: 1px solid #29292e; padding: 15px; }
+    #main-browser { flex: 1; display: flex; flex-direction: column; background: #fff; }
+    
+    input, button { padding: 10px; border-radius: 6px; border: none; font-size: 14px; }
+    input { background: #29292e; color: white; margin-bottom: 8px; outline: none; }
+    button { background: #5865f2; color: white; cursor: pointer; font-weight: bold; }
+    button:hover { background: #4752c4; }
+
+    .article-list { margin-top: 20px; overflow-y: auto; flex: 1; list-style: none; padding: 0; }
+    .article-item { background: #202024; padding: 12px; border-radius: 6px; margin-bottom: 8px; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
+    .article-item:hover { border-color: #5865f2; }
+    .article-title { font-weight: bold; font-size: 14px; margin-bottom: 4px; }
+    .article-url { font-size: 11px; color: #aaa; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    #browser-frame { flex: 1; border: none; width: 100%; height: 100%; background: white; }
+    #url-indicator { background: #f0f0f4; color: #333; padding: 8px; font-size: 12px; border-bottom: 1px solid #ddd; display: flex; align-items: center; }
+  </style>
+</head>
+<body>
+
+  <div id="sidebar">
+    <h3>Lavant Hub</h3>
+    <input type="text" id="titleInput" placeholder="Article Title...">
+    <input type="text" id="urlInput" placeholder="https://example.com...">
+    <button id="uploadBtn">Share to Hub</button>
+
+    <ul class="article-list" id="articleList">
+      </ul>
+  </div>
+
+  <div id="main-browser">
+    <div id="url-indicator">🌐 Active Viewport: <strong id="currentUrl" style="margin-left: 5px;">None Loaded</strong></div>
+    <iframe id="browser-frame" src="about:blank" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+  </div>
+
+  <script type="module">
+    // Import the functions you need from the CDN SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+
+    // Your web app's live Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCvWmCMX0TeNFDnHIDZgmuylTAjbwVFsAk",
+      authDomain: "lavant-hub.firebaseapp.com",
+      databaseURL: "https://lavant-hub-default-rtdb.firebaseio.com",
+      projectId: "lavant-hub",
+      storageBucket: "lavant-hub.firebasestorage.app",
+      messagingSenderId: "54929531188",
+      appId: "1:54929531188:web:36e3b528c849193979c561",
+      measurementId: "G-8QNTYKSQKN"
+    };
+
+    // Initialize Firebase and Realtime Database
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const articlesRef = ref(database, 'articles');
+
+    // DOM Elements
+    const browserFrame = document.getElementById('browser-frame');
+    const currentUrlDisplay = document.getElementById('currentUrl');
+    const titleInput = document.getElementById('titleInput');
+    const urlInput = document.getElementById('urlInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const articleList = document.getElementById('articleList');
+
+    // Helper to load a URL into the Iframe viewport
+    function loadUrl(url) {
+      browserFrame.src = url;
+      currentUrlDisplay.innerText = url;
+    }
+
+    // Upload Handler: Pushes data out to the global cloud
+    function uploadArticle() {
+      const title = titleInput.value.trim();
+      let url = urlInput.value.trim();
+      
+      if (!title || !url) return alert("Please fill in both fields!");
+      if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+      // Send object to Firebase database
+      push(articlesRef, { title, url })
+        .then(() => {
+          titleInput.value = '';
+          urlInput.value = '';
+        })
+        .catch((error) => alert("Upload error: " + error.message));
+    }
+
+    // Attach click handler to the button
+    uploadBtn.addEventListener('click', uploadArticle);
+
+    // Live Sync Listener: Listens to database updates and changes the UI in real-time
+    onValue(articlesRef, (snapshot) => {
+      articleList.innerHTML = '';
+      
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        
+        // Reverse array sorting to ensure newly uploaded URLs remain on top
+        Object.keys(data).reverse().forEach((key) => {
+          const art = data[key];
+          
+          const li = document.createElement('li');
+          li.className = 'article-item';
+          li.onclick = () => loadUrl(art.url);
+          li.innerHTML = `<div class="article-title">${art.title}</div><div class="article-url">${art.url}</div>`;
+          
+          articleList.appendChild(li);
+        });
+      } else {
+        articleList.innerHTML = '<li style="color: #666; font-size: 13px; text-align: center; margin-top:20px;">No links uploaded yet. Be the first!</li>';
+      }
+    });
+  </script>
+</body>
+</html>
