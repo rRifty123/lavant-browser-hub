@@ -18,10 +18,14 @@
     
     /* Global Dashboard Header */
     header { background: var(--bg-surface); padding: 15px 20px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #29292e; gap: 10px; position: relative; }
-    .search-wrapper { position: relative; width: 100%; max-width: 600px; display: flex; align-items: center; }
-    #searchBar { width: 100%; padding: 12px 50px 12px 15px; border-radius: 8px; border: none; background: var(--bg-input); color: white; font-size: 15px; outline: none; }
-    #openCreateModal { position: absolute; right: 10px; background: var(--accent); border: none; color: white; width: 32px; height: 32px; border-radius: 6px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+    .search-wrapper { position: relative; width: 100%; max-width: 600px; display: flex; align-items: center; gap: 10px; }
+    #searchBar { flex: 1; padding: 12px 50px 12px 15px; border-radius: 8px; border: none; background: var(--bg-input); color: white; font-size: 15px; outline: none; }
+    #openCreateModal { position: absolute; right: 75px; background: var(--accent); border: none; color: white; width: 32px; height: 32px; border-radius: 6px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 5; }
     #openCreateModal:hover { background: var(--accent-hover); }
+    
+    /* LAI Button Styling */
+    .lai-btn { background: linear-gradient(135deg, #a855f7, #7c3aed); border: none; color: white; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; letter-spacing: 0.5px; box-shadow: 0 0 10px rgba(124, 58, 237, 0.4); transition: transform 0.2s, box-shadow 0.2s; }
+    .lai-btn:hover { transform: translateY(-1px); box-shadow: 0 0 15px rgba(124, 58, 237, 0.7); }
 
     /* Recent Items Screen Space */
     main { flex: 1; padding: 30px; overflow-y: auto; max-width: 1200px; width: 100%; margin: 0 auto; box-sizing: border-box; }
@@ -51,7 +55,6 @@
     
     /* Controls Framework */
     .sidebar-controls { width: 300px; background: var(--bg-surface); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; box-sizing: border-box; }
-    .canvas { flex: 1; background: white; border-radius: 8px; color: black; padding: 30px; overflow-y: auto; box-sizing: border-box; }
     
     input[type="text"], textarea, select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #333; background: var(--bg-input); color: white; box-sizing: border-box; }
     .btn-action { background: var(--accent); color: white; padding: 10px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; }
@@ -59,6 +62,13 @@
 
     /* Viewer Modal Frame styling */
     #viewerFrame { width: 100%; height: 100%; border: none; background: white; }
+
+    /* LAI Agent Panel Styling */
+    .lai-chat-container { display: flex; flex-direction: column; height: 300px; background: var(--bg-input); border-radius: 8px; padding: 15px; text-align: left; margin-top: 15px; overflow-y: auto; font-size: 14px; line-height: 1.5; border: 1px solid #444; }
+    .lai-msg { margin-bottom: 12px; padding: 10px; border-radius: 6px; }
+    .lai-user { background: rgba(255,255,255,0.05); align-self: flex-end; }
+    .lai-bot { background: rgba(124, 58, 237, 0.15); border-left: 3px solid #a855f7; }
+    .lai-source-link { color: #00bcd4; text-decoration: underline; cursor: pointer; margin-top: 5px; display: inline-block; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -67,6 +77,7 @@
     <div class="search-wrapper">
       <input type="text" id="searchBar" placeholder="Search saved articles and websites...">
       <button id="openCreateModal">+</button>
+      <button class="lai-btn" id="openLaiModal">🤖 LAI Agent</button>
     </div>
   </header>
 
@@ -84,6 +95,23 @@
       <div class="modal-buttons">
         <button class="btn-large btn-article" onclick="openScreen('articleScreen')">📝 <span>Article</span></button>
         <button class="btn-large btn-website" onclick="openScreen('websiteScreen')">🌐 <span>Website</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div id="laiModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 550px;">
+      <button class="modal-close" onclick="closeModal('laiModal')">×</button>
+      <h3 style="margin-top:0; font-size: 24px; color: #a855f7;">Lavant AI Browser Agent</h3>
+      <p style="color: var(--text-muted); font-size: 13px;">Ask any question. LAI will analyze your keywords, crawl the local browser databases, and synthesize an accurate extraction map.</p>
+      
+      <div class="lai-chat-container" id="laiChatLog">
+        <div class="lai-msg lai-bot">System initialized. I have complete index visibility across all active Lavant articles and web domains. Ask me anything!</div>
+      </div>
+
+      <div style="display:flex; gap: 8px; margin-top:12px;">
+        <input type="text" id="laiQueryInput" placeholder="What is the speed of Lavant Pro?" style="margin:0;">
+        <button class="btn-action" id="laiSubmitBtn" style="background: #a855f7; white-space: nowrap;">Ask Agent</button>
       </div>
     </div>
   </div>
@@ -160,7 +188,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
     import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
-    // Your production Web System profile configurations vectors
+    // Your production Web System profile configuration
     const firebaseConfig = {
       apiKey: "AIzaSyCvWmCMX0TeNFDnHIDZgmuylTAjbwVFsAk",
       authDomain: "lavant-hub.firebaseapp.com",
@@ -172,15 +200,15 @@
       measurementId: "G-8QNTYKSQKN"
     };
 
-    // Instantiate Database
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
     const creationsRef = ref(database, 'creations');
 
     let allCreationsLocalArray = [];
 
-    // Navigation UI Layer Triggers
+    // Dashboard Modal Handlers
     document.getElementById('openCreateModal').onclick = () => document.getElementById('createModal').style.display = 'flex';
+    document.getElementById('openLaiModal').onclick = () => document.getElementById('laiModal').style.display = 'flex';
     
     window.closeModal = function(id) { document.getElementById(id).style.display = 'none'; };
     window.closeScreen = function(id) { document.getElementById(id).style.display = 'none'; };
@@ -190,7 +218,7 @@
       document.getElementById(screenId).style.display = 'flex';
     };
 
-    // Website Block Object Component Generators
+    // Code Template Block Generators
     window.injectTemplate = function(type) {
       const codeField = document.getElementById('webHtml');
       let blocks = "";
@@ -204,18 +232,19 @@
       codeField.value += blocks;
     };
 
-    // Cloud Publishers Systems
+    // Firebase Publishers
     document.getElementById('saveArticleBtn').onclick = function() {
       const title = document.getElementById('artTitle').value.trim() || "Untitled Document Framework";
+      const bodyText = document.getElementById('artBody').value;
       const htmlContent = `
         <div style="background:${document.getElementById('artBg').value}; min-height:100vh; padding:40px; font-family:serif; line-height:1.6; color:#111;">
           <h1 style="font-size:2.5rem; border-bottom:2px solid #333; padding-bottom:10px;">${title}</h1>
           ${document.getElementById('artImg').value ? `<img src="${document.getElementById('artImg').value}" style="max-width:100%; border-radius:6px; margin:20px 0; max-height:400px; object-fit:cover; display:block;">` : ''}
-          <p style="font-size:1.2rem; white-space:pre-wrap;">${document.getElementById('artBody').value}</p>
+          <p style="font-size:1.2rem; white-space:pre-wrap;">${bodyText}</p>
           ${document.getElementById('artLink').value ? `<br><a href="${document.getElementById('artLink').value}" target="_blank" style="color:#5865f2; font-weight:bold; font-family:sans-serif;">Read External Sources Link →</a>` : ''}
         </div>`;
       
-      push(creationsRef, { title, type: 'article', data: htmlContent }).then(() => {
+      push(creationsRef, { title, type: 'article', data: htmlContent, searchableText: (title + " " + bodyText) }).then(() => {
         closeScreen('articleScreen');
         resetArticleInputs();
       });
@@ -223,9 +252,10 @@
 
     document.getElementById('saveWebsiteBtn').onclick = function() {
       const title = document.getElementById('webTitle').value.trim() || "Untitled Dynamic Webspace";
-      const codeCompiled = `<div style="background:white; color:black; min-height:100vh; padding:20px;">${document.getElementById('webHtml').value}</div>`;
+      const plainHtmlCode = document.getElementById('webHtml').value;
+      const codeCompiled = `<div style="background:white; color:black; min-height:100vh; padding:20px;">${plainHtmlCode}</div>`;
       
-      push(creationsRef, { title, type: 'website', data: codeCompiled }).then(() => {
+      push(creationsRef, { title, type: 'website', data: codeCompiled, searchableText: (title + " " + plainHtmlCode) }).then(() => {
         closeScreen('websiteScreen');
         document.getElementById('webTitle').value = '';
         document.getElementById('webHtml').value = '';
@@ -237,12 +267,10 @@
       document.getElementById('artImg').value = ''; document.getElementById('artLink').value = '';
     }
 
-    // Interactive Render Pipelines
+    // Viewport Controller
     window.launchViewer = function(title, type, index) {
       document.getElementById('viewerModalTitle').innerText = `🌐 Lavant Sandbox Viewport: [${type.toUpperCase()}] ${title}`;
       const iframe = document.getElementById('viewerFrame');
-      
-      // Inject the compiled dynamic document content into the sandboxed viewport window safely
       iframe.srcdoc = allCreationsLocalArray[index].data;
       document.getElementById('viewerModal').style.display = 'flex';
     };
@@ -250,12 +278,10 @@
     function renderFeedGrid(items) {
       const grid = document.getElementById('creationGrid');
       grid.innerHTML = '';
-      
       if(items.length === 0) {
         grid.innerHTML = `<div style="color:var(--text-muted); padding:20px; grid-column: 1/-1; text-align:center;">No creations discovered matching the specified registry index.</div>`;
         return;
       }
-
       items.forEach((item, index) => {
         const card = document.createElement('div');
         card.className = 'card';
@@ -268,7 +294,7 @@
       });
     }
 
-    // Cloud Listener & Frontend Sync Hook
+    // Firebase Core Sync
     onValue(creationsRef, (snapshot) => {
       allCreationsLocalArray = [];
       if(snapshot.exists()) {
@@ -280,7 +306,7 @@
       renderFeedGrid(allCreationsLocalArray);
     });
 
-    // Realtime Local Search Filter Engine Engine Logic
+    // Realtime Registry Search Bar
     document.getElementById('searchBar').addEventListener('input', (e) => {
       const query = e.target.value.toLowerCase().trim();
       const filtered = allCreationsLocalArray.filter(item => 
@@ -288,6 +314,94 @@
       );
       renderFeedGrid(filtered);
     });
+
+    // ==========================================
+    //          LAI AGENT COGNITIVE LAYER
+    // ==========================================
+    const laiChatLog = document.getElementById('laiChatLog');
+    const laiQueryInput = document.getElementById('laiQueryInput');
+    const laiSubmitBtn = document.getElementById('laiSubmitBtn');
+
+    function triggerLaiAgentProcessing() {
+      const prompt = laiQueryInput.value.trim();
+      if (!prompt) return;
+
+      // Render User Speech Bubble
+      appendLaiMessage(prompt, 'lai-user');
+      laiQueryInput.value = '';
+
+      // Text Processing: Tokenize and isolate unique keywords
+      const cleanString = prompt.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,"");
+      const tokens = cleanString.split(/\s+/);
+      
+      // Filter out low-value semantic stop words
+      const stopWords = ['what', 'is', 'the', 'a', 'an', 'and', 'or', 'in', 'on', 'at', 'to', 'for', 'find', 'me', 'look', 'through', 'articles', 'websites', 'lavant', 'browser', 'show', 'who', 'how', 'any', 'are', 'about'];
+      const keywords = tokens.filter(word => word.length > 2 && !stopWords.includes(word));
+
+      // Database Crawling Step
+      let optimalMatch = null;
+      let highestKeywordsFoundCount = 0;
+
+      allCreationsLocalArray.forEach((artifact, index) => {
+        let textToSearch = (artifact.searchableText || artifact.title).toLowerCase();
+        let currentMatchScore = 0;
+
+        keywords.forEach(word => {
+          if (textToSearch.includes(word)) {
+            currentMatchScore++;
+          }
+        });
+
+        if (currentMatchScore > highestKeywordsFoundCount) {
+          highestKeywordsFoundCount = currentMatchScore;
+          optimalMatch = { ...artifact, originalIndex: index };
+        }
+      });
+
+      // Construct Response Elements
+      setTimeout(() => {
+        if (optimalMatch && highestKeywordsFoundCount > 0) {
+          // Extract text context safely, trimming markup strings
+          const plainContextSample = optimalMatch.searchableText || optimalMatch.title;
+          const previewText = plainContextSample.length > 180 ? plainContextSample.substring(0, 180) + "..." : plainContextSample;
+
+          let aiResponse = `I crawled our browser storage and isolated these key data arrays: <strong>[${keywords.join(', ')}]</strong>.<br><br>
+            I discovered a matching structural match inside the ${optimalMatch.type} <strong>"${optimalMatch.title}"</strong>.<br><br>
+            <strong>Extracted Answer Matrix:</strong> "${previewText}"`;
+          
+          appendLaiMessage(aiResponse, 'lai-bot', optimalMatch);
+        } else {
+          let fallbackMessage = `I indexed the query against available schemas using the target keys: <strong>[${keywords.length > 0 ? keywords.join(', ') : 'None Isolated'}]</strong>.<br><br>
+            No data nodes inside current Lavant documents or website layouts contain these specific matching references. Try making a document first!`;
+          appendLaiMessage(fallbackMessage, 'lai-bot');
+        }
+      }, 650);
+    }
+
+    function appendLaiMessage(text, className, sourceObj = null) {
+      const msg = document.createElement('div');
+      msg.className = `lai-msg ${className}`;
+      msg.innerHTML = text;
+
+      // If a match was found, inject a quick-launch reference link to inspect the page
+      if (sourceObj) {
+        const link = document.createElement('div');
+        link.className = 'lai-source-link';
+        link.innerText = `Launch Viewport: ${sourceObj.title} →`;
+        link.onclick = () => {
+          closeModal('laiModal');
+          launchViewer(sourceObj.title, sourceObj.type, sourceObj.originalIndex);
+        };
+        msg.appendChild(link);
+      }
+
+      laiChatLog.appendChild(msg);
+      laiChatLog.scrollTop = laiChatLog.scrollHeight; // Keep log locked to bottom view
+    }
+
+    // Attach Event Triggers to AI Input Fields
+    laiSubmitBtn.onclick = triggerLaiAgentProcessing;
+    laiQueryInput.onkeypress = (e) => { if(e.key === 'Enter') triggerLaiAgentProcessing(); };
   </script>
 </body>
 </html>
