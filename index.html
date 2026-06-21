@@ -5,219 +5,239 @@
   <title>Lavant Web Browser Hub - Lava Studios</title>
   <style>
     :root {
-      --bg-dark: #0c0908;          /* Obsidian Crust */
-      --bg-surface: #17110e;       /* Cooling Magma */
-      --bg-input: #261b16;         /* Smoldering Ash */
-      --accent: #ff4500;           /* Pure Lava Orange */
-      --accent-glow: #ff7300;      /* Molten Radiance */
-      --accent-purple: #9d4edd;    /* LAI Neon Violet */
-      --text-main: #fcf6f2;        /* Heat-white Text */
-      --text-muted: #a69288;       /* Basalt Gray */
+      --bg-dark: #0c0908;
+      --bg-surface: #17110e;
+      --bg-input: #261b16;
+      --accent: #ff4500;
+      --accent-glow: #ff7300;
+      --text-main: #fcf6f2;
+      --text-muted: #a69288;
     }
 
     body { margin: 0; font-family: system-ui, -apple-system, sans-serif; background: var(--bg-dark); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
     
-    /* Lava Studios Premium Global Header */
+    /* Top Navigation Area Layout */
     header { background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-dark) 100%); padding: 20px; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid #3d1b0c; gap: 12px; position: relative; box-shadow: 0 4px 20px rgba(255, 69, 0, 0.15); }
-    .search-wrapper { position: relative; width: 100%; max-width: 750px; display: flex; align-items: center; gap: 12px; padding-left: 50px; }
+    .search-wrapper { position: relative; width: 100%; max-width: 750px; display: flex; align-items: center; gap: 12px; padding-left: 110px; }
     
-    /* Plus Button moved to the far left of the search framework */
-    #openCreateModal { position: absolute; left: 0px; background: linear-gradient(135deg, #ff7300, #ff2a00); border: none; color: white; width: 42px; height: 42px; border-radius: 8px; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 0 12px rgba(255, 69, 0, 0.4); transition: transform 0.2s, box-shadow 0.2s; }
-    #openCreateModal:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--accent-glow); }
+    #openCreateModal { position: absolute; left: 0px; background: linear-gradient(135deg, #ff7300, #ff2a00); border: none; color: white; width: 42px; height: 42px; border-radius: 8px; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 0 12px rgba(255, 69, 0, 0.4); }
     
-    #searchBar { flex: 1; padding: 12px 20px; border-radius: 8px; border: 1px solid #542713; background: var(--bg-input); color: white; font-size: 15px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
-    #searchBar:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(255, 69, 0, 0.2); }
-    
-    /* LAI Button on the right */
-    .lai-btn { background: linear-gradient(135deg, #b5179e, #7209b7); border: none; color: white; padding: 0 22px; height: 42px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; letter-spacing: 0.5px; box-shadow: 0 0 12px rgba(114, 9, 183, 0.4); display: flex; align-items: center; gap: 6px; transition: transform 0.2s, box-shadow 0.2s; }
-    .lai-btn:hover { transform: translateY(-1px); box-shadow: 0 0 20px rgba(181, 23, 158, 0.7); }
+    /* Images tab selector button */
+    .images-tab-btn { position: absolute; left: 52px; background: #261b16; border: 1px solid #542713; color: white; width: 42px; height: 42px; border-radius: 8px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .images-tab-btn:hover { border-color: var(--accent); color: var(--accent-glow); }
 
-    /* Main Grid View Dashboard */
+    #fakeSearchBar { flex: 1; padding: 12px 20px; border-radius: 8px; border: 1px solid #542713; background: var(--bg-input); color: var(--text-muted); font-size: 14px; cursor: text; text-align: left; }
+    
+    .lai-btn { background: linear-gradient(135deg, #b5179e, #7209b7); border: none; color: white; padding: 0 22px; height: 42px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; letter-spacing: 0.5px; box-shadow: 0 0 12px rgba(114, 9, 183, 0.4); display: flex; align-items: center; gap: 6px; }
+
+    /* Dashboard Layout Feed space */
     main { flex: 1; padding: 40px 20px; overflow-y: auto; max-width: 1200px; width: 100%; margin: 0 auto; box-sizing: border-box; }
     h2 { margin-top: 0; font-size: 24px; letter-spacing: 0.5px; font-weight: 800; background: linear-gradient(90deg, #fff, var(--accent-glow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; margin-top: 20px; }
     
-    /* Lava Card Themes */
-    .card { background: linear-gradient(145deg, #1f1511, #120d0b); border: 1px solid #3d1b0c; border-radius: 12px; padding: 25px; cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); position: relative; display: flex; flex-direction: column; justify-content: space-between; min-height: 130px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+    .card { background: linear-gradient(145deg, #1f1511, #120d0b); border: 1px solid #3d1b0c; border-radius: 12px; padding: 25px; cursor: pointer; transition: all 0.25s; display: flex; flex-direction: column; justify-content: space-between; min-height: 130px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
     .card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 6px 20px rgba(255, 69, 0, 0.2); }
-    .card-title { font-weight: 700; font-size: 17px; margin-bottom: 8px; color: var(--text-main); line-height: 1.4; }
+    .card-title { font-weight: 700; font-size: 17px; margin-bottom: 8px; color: var(--text-main); }
     .card-type { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 800; margin-top: 15px; }
     
-    /* Modals Infrastructure */
+    /* Modals & Screens Shared Framework */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 3, 2, 0.9); display: none; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(4px); }
-    .modal-content { background: #1c1411; padding: 35px; border-radius: 16px; border: 1px solid #542713; width: 100%; max-width: 450px; text-align: center; position: relative; box-shadow: 0 10px 40px rgba(255, 69, 0, 0.1); }
+    .modal-content { background: #1c1411; padding: 35px; border-radius: 16px; border: 1px solid #542713; width: 100%; max-width: 450px; text-align: center; position: relative; }
     .modal-close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
-    .modal-close:hover { color: #fff; }
-    .modal-buttons { display: flex; gap: 15px; margin-top: 25px; }
     
-    .btn-large { flex: 1; padding: 22px; font-size: 16px; font-weight: bold; border-radius: 10px; border: none; cursor: pointer; color: white; display: flex; flex-direction: column; align-items: center; gap: 10px; transition: transform 0.2s; }
-    .btn-large:hover { transform: scale(1.03); }
-    .btn-article { background: linear-gradient(135deg, #ff4500, #d01c00); box-shadow: 0 4px 15px rgba(213, 28, 0, 0.3); }
-    .btn-website { background: linear-gradient(135deg, #ff9f1c, #ff6b6b); color: #fff; box-shadow: 0 4px 15px rgba(255, 159, 28, 0.3); }
-
-    /* Production Screens */
     .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 200; display: none; flex-direction: column; }
     .screen-header { background: var(--bg-surface); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #3d1b0c; }
     .screen-header h3 { margin: 0; background: linear-gradient(90deg, #fff, #ff9f1c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
     .screen-body { flex: 1; display: flex; padding: 20px; gap: 20px; overflow: hidden; background: #0f0b09; }
     
     .sidebar-controls { width: 320px; background: var(--bg-surface); border-radius: 12px; border: 1px solid #3d1b0c; padding: 20px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; box-sizing: border-box; }
-    .sidebar-controls label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-glow); }
-    
     input[type="text"], textarea, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #542713; background: var(--bg-input); color: white; font-size: 14px; box-sizing: border-box; outline: none; }
-    input[type="text"]:focus, textarea:focus, select:focus { border-color: var(--accent-glow); }
+    .btn-action { background: linear-gradient(135deg, #ff7300, #ff2a00); color: white; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
     
-    .btn-action { background: linear-gradient(135deg, #ff7300, #ff2a00); color: white; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: opacity 0.2s; }
-    .btn-action:hover { opacity: 0.9; }
+    .preview-pane-container { flex: 1; display: flex; flex-direction: column; background: #fff; border-radius: 12px; overflow: hidden; border: 4px solid var(--bg-surface); }
+    .preview-iframe { flex: 1; border: none; background: white; }
 
-    /* Interactive Live Split Code Preview Windows */
-    .preview-pane-container { flex: 1; display: flex; flex-direction: column; background: #fff; border-radius: 12px; overflow: hidden; border: 4px solid var(--bg-surface); box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
-    .preview-header-bar { background: #e2e8f0; color: #475569; padding: 8px 15px; font-size: 12px; font-weight: bold; letter-spacing: 0.5px; border-bottom: 1px solid #cbd5e1; display: flex; align-items: center; gap: 6px; }
-    .preview-iframe { flex: 1; border: none; background: white; width: 100%; height: 100%; }
-
-    /* LAI Window panel styling */
-    .lai-chat-container { display: flex; flex-direction: column; height: 320px; background: #130e0c; border-radius: 10px; padding: 15px; text-align: left; margin-top: 15px; overflow-y: auto; font-size: 14px; line-height: 1.5; border: 1px solid #4a154b; }
-    .lai-msg { margin-bottom: 12px; padding: 12px; border-radius: 8px; max-width: 85%; }
-    .lai-user { background: #26171d; border: 1px solid #6b114d; align-self: flex-end; color: #ffd6f5; }
-    .lai-bot { background: #17111c; border-left: 4px solid #b5179e; border-top: 1px solid #3c1642; border-bottom: 1px solid #3c1642; border-right: 1px solid #3c1642; color: #f3e8ff; }
-    .lai-source-link { color: #ff9f1c; text-decoration: none; cursor: pointer; margin-top: 8px; display: inline-block; font-weight: bold; font-size: 13px; }
-    .lai-source-link:hover { text-decoration: underline; }
+    /* ==========================================
+          LAI GEMINI REDESIGN STYLING 
+       ========================================== */
+    .lai-window-content { width: 100%; max-width: 700px; height: 80vh; background: #0e0a08; border: 1px solid #4a0f0f; border-radius: 16px; display: flex; flex-direction: column; overflow: hidden; position: relative; box-shadow: 0 0 40px rgba(255, 0, 0, 0.05); }
+    .lai-chat-container { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; margin-bottom: 85px; }
     
-    #viewerFrame { width: 100%; height: 100%; border: none; background: white; }
-    .studio-tag { position: absolute; left: 20px; font-size: 11px; font-weight: 900; tracking: 2px; text-transform: uppercase; color: #542713; font-letter: 1px; }
+    /* Input Wrapper anchored at the bottom with explicit Red Glow */
+    .lai-input-wrapper { position: absolute; bottom: 20px; left: 20px; right: 20px; display: flex; gap: 10px; background: #1a1210; padding: 10px; border-radius: 12px; border: 1px solid #7a1c1c; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+    .lai-input-wrapper input { flex: 1; background: transparent; border: none; color: white; font-size: 15px; outline: none; padding: 5px; }
+    
+    /* Floating Persistent Chat History Recall Trigger Button */
+    #floatingHistoryBtn { position: fixed; bottom: 25px; right: 25px; background: linear-gradient(135deg, #2d0b3d, #1a0526); border: 1px solid #7209b7; color: #d800a6; padding: 12px 18px; border-radius: 30px; font-weight: bold; cursor: pointer; z-index: 250; font-size: 13px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+
+    /* ==========================================
+          CINEMATIC SEPARATE SEARCH HUB 
+       ========================================== */
+    .search-hub-layout { display: flex; width: 100%; height: 100%; gap: 30px; }
+    .search-hub-left { flex: 1.3; display: flex; flex-direction: column; gap: 20px; }
+    .search-hub-right { flex: 0.8; background: var(--bg-surface); border: 1px solid #3d1b0c; border-radius: 16px; padding: 25px; display: flex; flex-direction: column; }
+    
+    /* Interactive Inline Search AI Summary Card Row */
+    .ai-summary-card { background: linear-gradient(145deg, #1e0f0a, #2d1209); border: 1px solid #7a2a0d; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(255,69,0,0.1); }
+    .suggested-box { background: rgba(255,255,255,0.02); border-radius: 8px; padding: 10px; border: 1px solid #261b16; display: flex; flex-direction: column; gap: 8px; }
+    .suggested-item { padding: 8px; cursor: pointer; border-radius: 4px; font-size: 13px; color: var(--text-muted); }
+    .suggested-item:hover { background: var(--bg-input); color: white; }
+
+    /* ==========================================
+          IMAGES PRODUCTION ENGINE TAB 
+       ========================================== */
+    .image-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 20px; overflow-y: auto; flex: 1; }
+    .gallery-img-wrapper { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid #3d1b0c; height: 150px; background: #050302; }
+    .gallery-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+
+    .studio-tag { position: absolute; left: 20px; font-size: 11px; font-weight: 900; tracking: 2px; text-transform: uppercase; color: #542713; }
+    .btn-large { flex: 1; padding: 22px; font-size: 16px; font-weight: bold; border-radius: 10px; border: none; cursor: pointer; color: white; display: flex; flex-direction: column; align-items: center; gap: 10px; }
   </style>
 </head>
 <body>
 
-  <!-- TOP RUNTIME ENGINE: Lava Header Architecture -->
   <header>
     <div class="studio-tag">Lava Studios</div>
     <div class="search-wrapper">
-      <button id="openCreateModal">+</button> <!-- Plus Button Relocated Here -->
-      <input type="text" id="searchBar" placeholder="Search saved articles and websites inside Lavant...">
+      <button id="openCreateModal">+</button>
+      <button class="images-tab-btn" id="openImagesBtn">🖼️</button>
+      <div id="fakeSearchBar">Search saved articles and websites inside Lavant...</div>
       <button class="lai-btn" id="openLaiModal">🔮 LAI Agent</button>
     </div>
   </header>
 
-  <!-- DASHBOARD FEED ARRAY LAYER -->
   <main>
     <h2>Recent Studio Pipelines</h2>
-    <div id="creationGrid" class="grid">
-      <!-- Sync nodes -->
-    </div>
+    <div id="creationGrid" class="grid"></div>
   </main>
 
-  <!-- POPUP CONTROL ROUTER -->
+  <button id="floatingHistoryBtn">📜 View Previous Chats</button>
+
+  <div id="searchHubScreen" class="screen">
+    <div class="screen-header">
+      <h3 style="background: linear-gradient(90deg, #fff, #ff4500); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Lavant Global Search Layer</h3>
+      <button class="btn-action" style="background:#261b16;" onclick="closeScreen('searchHubScreen')">Exit Hub</button>
+    </div>
+    <div class="screen-body">
+      <div class="search-hub-layout">
+        <div class="search-hub-left">
+          <input type="text" id="activeHubSearchField" placeholder="Type query parameter mapping strings...">
+          
+          <div style="margin-top: 10px;">
+            <label style="font-size:11px; font-weight:bold; color:var(--accent-glow); text-transform:uppercase;">Suggested Searches</label>
+            <div class="suggested-box" id="suggestedSearchesContainer"></div>
+          </div>
+
+          <div style="flex:1; overflow-y:auto; margin-top:15px; padding-right:10px;">
+            <div id="aiSummaryTopResultBox"></div>
+            <div id="hubSearchResultsGrid" class="grid" style="margin-top:0;"></div>
+          </div>
+        </div>
+
+        <div class="search-hub-right">
+          <h4 style="margin:0 0 15px 0; font-size:16px; border-bottom:1px solid #3d1b0c; padding-bottom:10px; color:#fff;">Recent Searches</h4>
+          <div id="recentSearchesLogList" style="display:flex; flex-direction:column; gap:10px; overflow-y:auto; flex:1;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="laiModal" class="modal-overlay">
+    <div class="lai-window-content">
+      <button class="modal-close" onclick="closeModal('laiModal')">×</button>
+      <div style="padding: 20px; border-bottom: 1px solid #2d1210; background: #140e0c;">
+        <h3 style="margin:0; font-size: 20px; color: #ef4444; font-weight:800;">Lavant AI (Powered by Gemini)</h3>
+        <span style="font-size:11px; color:var(--text-muted);">Direct cognitive neural network stream link active</span>
+      </div>
+      
+      <div class="lai-chat-container" id="laiChatLog">
+        <div class="lai-msg lai-bot" style="background:#140e0c; border-left:3px solid #ef4444; padding:12px; border-radius:6px;">Lavant AI Agent compiled cleanly. Powered directly by Google Gemini neural layers. Ask me anything about your files or general knowledge!</div>
+      </div>
+
+      <div class="lai-input-wrapper">
+        <input type="text" id="laiQueryInput" placeholder="Ask Gemini engine coordinates...">
+        <button class="btn-action" id="laiSubmitBtn" style="background: #ef4444; padding: 0 15px;">Transmit</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="historyLogsModal" class="modal-overlay">
+    <div class="modal-content" style="max-width:500px; border-color:#7209b7;">
+      <button class="modal-close" onclick="closeModal('historyLogsModal')">×</button>
+      <h3 style="margin-top:0; color:#b5179e;">Historical Chat Logs Matrix</h3>
+      <div id="chatHistoryTrackingContainer" style="max-height:350px; overflow-y:auto; text-align:left; display:flex; flex-direction:column; gap:12px; padding-right:5px;"></div>
+    </div>
+  </div>
+
+  <div id="imagesTabScreen" class="screen">
+    <div class="screen-header">
+      <h3>Studio Media Grid Architecture</h3>
+      <button class="btn-action" style="background:#261b16;" onclick="closeScreen('imagesTabScreen')">Return</button>
+    </div>
+    <div class="screen-body">
+      <div class="sidebar-controls" style="width:280px;">
+        <label>Upload New Asset Node</label>
+        <input type="text" id="imageUploadTitleInput" placeholder="Asset Identifier Title">
+        <input type="text" id="imageUploadUrlInput" placeholder="Image Core Source URL">
+        <button class="btn-action" id="submitNewImageBtn">Commit Image Node</button>
+        <hr style="border-color:#3d1b0c; width:100%;">
+        <label>Filter Gallery Asset Registry</label>
+        <input type="text" id="gallerySearchField" placeholder="Query asset tag indices...">
+      </div>
+      <div style="flex:1; display:flex; flex-direction:column;">
+        <div class="image-gallery-grid" id="imageGalleryRenderGrid"></div>
+      </div>
+    </div>
+  </div>
+
   <div id="createModal" class="modal-overlay">
     <div class="modal-content">
       <button class="modal-close" onclick="closeModal('createModal')">×</button>
       <h3 style="margin-top:0; font-size: 22px; color: var(--accent-glow); font-weight: 800;">Forge Workspace</h3>
-      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Deploy an optimization canvas module under Lava Studio governance.</p>
       <div class="modal-buttons">
-        <button class="btn-large btn-article" onclick="openScreen('articleScreen')">📝 <span>Article Canvas</span></button>
-        <button class="btn-large btn-website" onclick="openScreen('websiteScreen')">🌐 <span>Web System</span></button>
+        <button class="btn-large" style="background:linear-gradient(135deg, #ff4500, #d01c00);" onclick="openScreen('articleScreen')">📝 <span>Article Canvas</span></button>
+        <button class="btn-large" style="background:linear-gradient(135deg, #ff9f1c, #ff6b6b);" onclick="openScreen('websiteScreen')">🌐 <span>Web System</span></button>
       </div>
     </div>
   </div>
 
-  <!-- LAI COGNITIVE INTEGRATION WINDOW -->
-  <div id="laiModal" class="modal-overlay">
-    <div class="modal-content" style="max-width: 550px; border-color: #7209b7; box-shadow: 0 0 30px rgba(114, 9, 183, 0.2);">
-      <button class="modal-close" onclick="closeModal('laiModal')">×</button>
-      <h3 style="margin-top:0; font-size: 24px; color: #d800a6; font-weight: 800;">LAI Search Agent</h3>
-      <p style="color: var(--text-muted); font-size: 13px;">Pose your parameter prompt. LAI scans structural codebases and maps content extractions in real-time.</p>
-      
-      <div class="lai-chat-container" id="laiChatLog">
-        <div class="lai-msg lai-bot">Lavant Artificial Intelligence online. Give me your requirements and I will comb through every structural node in the cluster index.</div>
-      </div>
-
-      <div style="display:flex; gap: 8px; margin-top:14px;">
-        <input type="text" id="laiQueryInput" placeholder="Ask LAI about your documents..." style="margin:0;">
-        <button class="btn-action" id="laiSubmitBtn" style="background: linear-gradient(135deg, #b5179e, #7209b7); white-space: nowrap; padding:0 20px;">Ask LAI</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ARTICLE DESIGN WORKSPACE -->
   <div id="articleScreen" class="screen">
-    <div class="screen-header">
-      <h3>Article Production Framework</h3>
-      <div>
-        <button class="btn-action" style="background:#3d1b0c; border:1px solid #542713; margin-right:10px;" onclick="closeScreen('articleScreen')">Cancel</button>
-        <button class="btn-action" id="saveArticleBtn">Publish Document</button>
-      </div>
-    </div>
+    <div class="screen-header"><h3>Article Production Framework</h3><div><button class="btn-action" style="background:#3d1b0c; margin-right:10px;" onclick="closeScreen('articleScreen')">Cancel</button><button class="btn-action" id="saveArticleBtn">Publish Document</button></div></div>
     <div class="screen-body">
       <div class="sidebar-controls">
-        <label>Document Meta Title</label>
-        <input type="text" id="artTitle" placeholder="Enter article name...">
-        <hr style="border: 1px solid #3d1b0c; width:100%; margin: 5px 0;">
-        <label>Canvas Background</label>
-        <select id="artBg">
-          <option value="#ffffff">Pure White Canvas</option>
-          <option value="#fdf6f0">Warm Studio Parchment</option>
-          <option value="#fff9db">Vintage Cream</option>
-          <option value="#e2f0d9">Soft Tech Sage</option>
-        </select>
-        <label>Image Node (URL)</label>
-        <input type="text" id="artImg" placeholder="https://images.unsplash.com/photo...">
-        <label>Hyperlink Integration</label>
-        <input type="text" id="artLink" placeholder="https://lavastudios.com">
+        <label>Document Meta Title</label><input type="text" id="artTitle" placeholder="Enter article name...">
+        <label>Canvas Background</label><select id="artBg"><option value="#ffffff">Pure White Canvas</option><option value="#fdf6f0">Warm Studio Parchment</option></select>
+        <label>Image Node (URL)</label><input type="text" id="artImg" placeholder="https://images.unsplash.com...">
+        <label>Hyperlink Integration</label><input type="text" id="artLink" placeholder="https://lavastudios.com">
       </div>
-      <div style="flex:1; display:flex; flex-direction:column;">
-        <textarea id="artBody" style="flex:1; background:white; color:black; padding:25px; font-size:16px; font-family: Georgia, serif; line-height: 1.6; border-radius: 12px; border:none; resize:none;" placeholder="Draft rich composition layer content bodies..."></textarea>
-      </div>
+      <div style="flex:1; display:flex; flex-direction:column;"><textarea id="artBody" style="flex:1; background:white; color:black; padding:25px; font-size:16px; font-family:serif; resize:none;" placeholder="Draft composition layer content..."></textarea></div>
     </div>
   </div>
 
-  <!-- WEBSITE SYSTEM CONSTRUCTOR WITH LIVE CODE SPLIT-SCREEN PREVIEW -->
   <div id="websiteScreen" class="screen">
-    <div class="screen-header">
-      <h3>Highly Advanced Website Builder</h3>
-      <div>
-        <button class="btn-action" style="background:#3d1b0c; border:1px solid #542713; margin-right:10px;" onclick="closeScreen('websiteScreen')">Cancel</button>
-        <button class="btn-action" id="saveWebsiteBtn">Publish Site Webspace</button>
-      </div>
-    </div>
+    <div class="screen-header"><h3>Highly Advanced Website Builder</h3><div><button class="btn-action" style="background:#3d1b0c; margin-right:10px;" onclick="closeScreen('websiteScreen')">Cancel</button><button class="btn-action" id="saveWebsiteBtn">Publish Site Webspace</button></div></div>
     <div class="screen-body">
       <div class="sidebar-controls">
-        <label>Web Domain Project Title</label>
-        <input type="text" id="webTitle" placeholder="Project Workspace Title">
-        <hr style="border: 1px solid #3d1b0c; width:100%; margin: 5px 0;">
+        <label>Web Domain Project Title</label><input type="text" id="webTitle" placeholder="Project Workspace Title">
         <label>Visual Object Injector</label>
-        <button class="btn-action" style="background:#3d1b0c; border: 1px solid #542713;" onclick="injectTemplate('hero')">+ Insert Hero Header</button>
-        <button class="btn-action" style="background:#3d1b0c; border: 1px solid #542713;" onclick="injectTemplate('cards')">+ Insert Features Matrix</button>
-        <button class="btn-action" style="background:#3d1b0c; border: 1px solid #542713;" onclick="injectTemplate('footer')">+ Insert Brand Footer</button>
+        <button class="btn-action" style="background:#3d1b0c;" onclick="injectTemplate('hero')">+ Insert Hero Header</button>
+        <button class="btn-action" style="background:#3d1b0c;" onclick="injectTemplate('cards')">+ Insert Features Matrix</button>
+        <button class="btn-action" style="background:#3d1b0c;" onclick="injectTemplate('footer')">+ Insert Brand Footer</button>
       </div>
-      
-      <!-- Split-View: Left Code Editor, Right Live Render Frame -->
       <div style="flex:1; display:flex; gap:20px; height:100%;">
-        <div style="flex:1; display:flex; flex-direction:column;">
-          <span style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Source HTML Node Editor</span>
-          <textarea id="webHtml" style="flex:1; font-family:monospace; background:#0a0706; color:#f07178; border:1px solid #3d1b0c; border-radius:12px; padding:15px; resize:none; line-height:1.4;" placeholder="<!-- Interactive text arrays here update the real-time preview viewport layout -->"></textarea>
-        </div>
-        
-        <!-- Live Real-Time Viewport Panel -->
-        <div class="preview-pane-container">
-          <div class="preview-header-bar">🖥️ Real-time Lavant Render Engine Preview Frame</div>
-          <iframe id="liveWebPreviewFrame" class="preview-iframe" srcdoc="<body style='font-family:sans-serif; padding:20px; color:#64748b;'>Begin injecting visual block fragments or write HTML source structures to generate rendering states here...</body>"></iframe>
-        </div>
+        <div style="flex:1; display:flex; flex-direction:column;"><textarea id="webHtml" style="flex:1; font-family:monospace; background:#0a0706; color:#f07178; padding:15px; resize:none;" placeholder=""></textarea></div>
+        <div class="preview-pane-container"><div class="preview-header-bar">🖥️ Real-time Lavant Render Engine Preview</div><iframe id="liveWebPreviewFrame" class="preview-iframe"></iframe></div>
       </div>
     </div>
   </div>
 
-  <!-- VIEWPORT MODAL WINDOW -->
   <div id="viewerModal" class="modal-overlay" style="padding:40px;">
-    <div class="modal-content" style="max-width:95%; width:100%; height:90%; display:flex; flex-direction:column; padding:12px; border-color:var(--accent);">
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:5px 10px 12px 10px;">
-        <span id="viewerModalTitle" style="font-weight:bold; color:white;">Viewport Live Context Stream</span>
-        <button class="btn-action" style="background:linear-gradient(135deg, #ef4444, #b91c1c); padding:6px 14px;" onclick="closeModal('viewerModal')">Exit Sandbox Frame</button>
-      </div>
+    <div class="modal-content" style="max-width:95%; width:100%; height:90%; display:flex; flex-direction:column; padding:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:5px 10px 12px 10px;"><span id="viewerModalTitle" style="font-weight:bold; color:white;">Viewport</span><button class="btn-action" style="background:linear-gradient(135deg, #ef4444, #b91c1c);" onclick="closeModal('viewerModal')">Exit</button></div>
       <iframe id="viewerFrame" sandbox="allow-scripts allow-same-origin"></iframe>
     </div>
   </div>
 
-  <!-- CLOUD RUNTIME SCRIPTS DATA ENGINE -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
     import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
@@ -236,206 +256,263 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
     const creationsRef = ref(database, 'creations');
+    const imagesRef = ref(database, 'images');
 
     let allCreationsLocalArray = [];
+    let allImagesLocalArray = [];
 
-    // Navigation Triggers
+    // Google Gemini API Gateway Integration
+    const GEMINI_API_KEY = "AQ.Ab8RN6JH4gU5gOJpzb-JN9mmANAURKvc9MLcZSKwz9RA-PEL3Q";
+    const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+    // Modals Navigation Controllers
     document.getElementById('openCreateModal').onclick = () => document.getElementById('createModal').style.display = 'flex';
     document.getElementById('openLaiModal').onclick = () => document.getElementById('laiModal').style.display = 'flex';
-    
+    document.getElementById('floatingHistoryBtn').onclick = () => document.getElementById('historyLogsModal').style.display = 'flex';
+    document.getElementById('openImagesBtn').onclick = () => openScreen('imagesTabScreen');
+    document.getElementById('fakeSearchBar').onclick = () => { openScreen('searchHubScreen'); executeSearchHubCompilation(); };
+
     window.closeModal = function(id) { document.getElementById(id).style.display = 'none'; };
     window.closeScreen = function(id) { document.getElementById(id).style.display = 'none'; };
-    
     window.openScreen = function(screenId) {
       closeModal('createModal');
       document.getElementById(screenId).style.display = 'flex';
-      if (screenId === 'websiteScreen') triggerLivePreviewUpdate(); // Init preview state
     };
 
-    // ==========================================
-    //       WEBSITE LIVE PREVIEW MONITOR
-    // ==========================================
+    // Live Web Preview Sync Monitor
     const webHtmlTextArea = document.getElementById('webHtml');
-    const liveWebPreviewFrame = document.getElementById('liveWebPreviewFrame');
-
     function triggerLivePreviewUpdate() {
-      const rawHtml = webHtmlTextArea.value;
-      const compiledDoc = `<div style="background:white; color:black; min-height:100vh; padding:20px; font-family:sans-serif;">${rawHtml}</div>`;
-      liveWebPreviewFrame.srcdoc = compiledDoc;
+      document.getElementById('liveWebPreviewFrame').srcdoc = `<div style="background:white; color:black; min-height:100vh; padding:20px; font-family:sans-serif;">${webHtmlTextArea.value}</div>`;
     }
-
-    // Listens for keystrokes inside the HTML code blocks to immediately re-render frame views
     webHtmlTextArea.addEventListener('input', triggerLivePreviewUpdate);
 
-    // Layout Injector Templates
     window.injectTemplate = function(type) {
-      let blocks = "";
-      if (type === 'hero') {
-        blocks = `\n<section style="background:linear-gradient(135deg, #ff4500, #ff7300); color:white; padding:50px 30px; text-align:center; font-family:sans-serif; border-radius:10px; box-shadow: 0 4px 15px rgba(255,69,0,0.2);">\n  <h1 style="font-size:2.8rem; margin:0; font-weight:800;">Lava Studios Engine</h1>\n  <p style="font-size:1.1rem; opacity:0.95; margin-top:10px;">Forged inside the highly advanced Lavant Web Builder.</p>\n  <button style="background:#0c0908; color:white; border:none; padding:12px 24px; font-weight:bold; border-radius:6px; cursor:pointer; margin-top:20px;">Initialize Protocol</button>\n</section>\n`;
-      } else if (type === 'cards') {
-        blocks = `\n<div style="display:flex; gap:20px; margin-top:30px; font-family:sans-serif; color:#1e293b;">\n  <div style="flex:1; background:#fff5f0; padding:20px; border-radius:8px; border:1px solid #ffdcd0;">\n    <h3 style="color:#d01c00; margin-top:0;">Volcanic Speed</h3>\n    <p style="font-size:14px; color:#475569;">Natively compiled asset tracking matrix configurations optimize delivery speeds.</p>\n  </div>\n  <div style="flex:1; background:#fff5f0; padding:20px; border-radius:8px; border:1px solid #ffdcd0;">\n    <h3 style="color:#d01c00; margin-top:0;">Obsidian Safety</h3>\n    <p style="font-size:14px; color:#475569;">Integrated sandbox protections wrap all operational execution components securely.</p>\n  </div>\n</div>\n`;
-      } else if (type === 'footer') {
-        blocks = `\n<footer style="margin-top:60px; border-top:2px solid #f1f5f9; padding:25px; text-align:center; font-family:sans-serif; color:#94a3b8; font-size:13px; font-weight:500;">\n  © ${new Date().getFullYear()} Lava Studios Global Development Group. Powered by Lavant.\n</footer>\n`;
-      }
-      webHtmlTextArea.value += blocks;
-      triggerLivePreviewUpdate(); // Force updates on insertions
+      if (type === 'hero') webHtmlTextArea.value += `\n<section style="background:linear-gradient(135deg, #ff4500, #ff7300); color:white; padding:50px 30px; text-align:center; border-radius:10px;"><h1 style="font-size:2.8rem; margin:0;">Lava Studios Engine</h1></section>\n`;
+      if (type === 'cards') webHtmlTextArea.value += `\n<div style="display:flex; gap:20px; margin-top:30px;"><div style="flex:1; background:#fff5f0; padding:20px; border-radius:8px;"><h3>Volcanic Speed</h3></div></div>\n`;
+      if (type === 'footer') webHtmlTextArea.value += `\n<footer style="margin-top:60px; text-align:center; color:#94a3b8;">© Lava Studios</footer>\n`;
+      triggerLivePreviewUpdate();
     };
 
-    // Firebase Core Push Publishers
+    // Firebase Push Pipelines
     document.getElementById('saveArticleBtn').onclick = function() {
-      const title = document.getElementById('artTitle').value.trim() || "Untitled Document Framework";
-      const bodyText = document.getElementById('artBody').value;
-      const htmlContent = `
-        <div style="background:${document.getElementById('artBg').value}; min-height:100vh; padding:40px; font-family:serif; line-height:1.6; color:#111;">
-          <h1 style="font-size:2.5rem; border-bottom:2px solid #333; padding-bottom:10px;">${title}</h1>
-          ${document.getElementById('artImg').value ? `<img src="${document.getElementById('artImg').value}" style="max-width:100%; border-radius:6px; margin:20px 0; max-height:400px; object-fit:cover; display:block;">` : ''}
-          <p style="font-size:1.2rem; white-space:pre-wrap;">${bodyText}</p>
-          ${document.getElementById('artLink').value ? `<br><a href="${document.getElementById('artLink').value}" target="_blank" style="color:#ff4500; font-weight:bold; font-family:sans-serif;">Read External Sources Link →</a>` : ''}
-        </div>`;
-      
-      push(creationsRef, { title, type: 'article', data: htmlContent, searchableText: (title + " " + bodyText) }).then(() => {
-        closeScreen('articleScreen');
-        resetArticleInputs();
-      });
+      const title = document.getElementById('artTitle').value.trim() || "Untitled Document";
+      const body = document.getElementById('artBody').value;
+      const content = `<div style="background:${document.getElementById('artBg').value}; min-height:100vh; padding:40px; color:#111;"><h1>${title}</h1><p>${body}</p></div>`;
+      push(creationsRef, { title, type: 'article', data: content, searchableText: title + " " + body }).then(() => { closeScreen('articleScreen'); });
     };
 
     document.getElementById('saveWebsiteBtn').onclick = function() {
-      const title = document.getElementById('webTitle').value.trim() || "Untitled Dynamic Webspace";
-      const plainHtmlCode = webHtmlTextArea.value;
-      const codeCompiled = `<div style="background:white; color:black; min-height:100vh; padding:20px;">${plainHtmlCode}</div>`;
-      
-      push(creationsRef, { title, type: 'website', data: codeCompiled, searchableText: (title + " " + plainHtmlCode) }).then(() => {
-        closeScreen('websiteScreen');
-        document.getElementById('webTitle').value = '';
-        webHtmlTextArea.value = '';
+      const title = document.getElementById('webTitle').value.trim() || "Untitled Webspace";
+      const code = `<div style="background:white; color:black; min-height:100vh; padding:20px;">${webHtmlTextArea.value}</div>`;
+      push(creationsRef, { title, type: 'website', data: code, searchableText: title + " " + webHtmlTextArea.value }).then(() => { closeScreen('websiteScreen'); });
+    };
+
+    document.getElementById('submitNewImageBtn').onclick = function() {
+      const title = document.getElementById('imageUploadTitleInput').value.trim() || "Untitled Image Asset";
+      const url = document.getElementById('imageUploadUrlInput').value.trim();
+      if(!url) return alert("Provide source URL path");
+      push(imagesRef, { title, url }).then(() => {
+        document.getElementById('imageUploadTitleInput').value = '';
+        document.getElementById('imageUploadUrlInput').value = '';
       });
     };
 
-    function resetArticleInputs() {
-      document.getElementById('artTitle').value = ''; document.getElementById('artBody').value = '';
-      document.getElementById('artImg').value = ''; document.getElementById('artLink').value = '';
-    }
-
-    // Viewport Controller
+    // Interactive Viewports Layout
     window.launchViewer = function(title, type, index) {
-      document.getElementById('viewerModalTitle').innerText = `🌐 Lavant Sandbox Viewport: [${type.toUpperCase()}] ${title}`;
-      const iframe = document.getElementById('viewerFrame');
-      iframe.srcdoc = allCreationsLocalArray[index].data;
+      document.getElementById('viewerModalTitle').innerText = `[${type.toUpperCase()}] ${title}`;
+      document.getElementById('viewerFrame').srcdoc = allCreationsLocalArray[index].data;
       document.getElementById('viewerModal').style.display = 'flex';
     };
 
     function renderFeedGrid(items) {
-      const grid = document.getElementById('creationGrid');
-      grid.innerHTML = '';
-      if(items.length === 0) {
-        grid.innerHTML = `<div style="color:var(--text-muted); padding:20px; grid-column: 1/-1; text-align:center;">No studio pipelines currently register updates matching this query index.</div>`;
-        return;
-      }
+      const grid = document.getElementById('creationGrid'); grid.innerHTML = '';
       items.forEach((item, index) => {
-        const card = document.createElement('div');
-        card.className = 'card';
+        const card = document.createElement('div'); card.className = 'card';
         card.onclick = () => launchViewer(item.title, item.type, index);
-        
-        let typeBadgeColor = item.type === 'article' ? 'linear-gradient(90deg, #ff4500, #ff7300)' : 'linear-gradient(90deg, #ff9f1c, #ffeb3b)';
-        card.innerHTML = `
-          <div class="card-title">${item.title}</div>
-          <div class="card-type" style="background:${typeBadgeColor}; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">${item.type}</div>
-        `;
+        card.innerHTML = `<div class="card-title">${item.title}</div><div class="card-type" style="color:var(--accent-glow);">${item.type}</div>`;
         grid.appendChild(card);
       });
     }
 
-    // Firebase Sync Sync
+    function renderImageGallery(items) {
+      const grid = document.getElementById('imageGalleryRenderGrid'); grid.innerHTML = '';
+      items.forEach(img => {
+        const wrap = document.createElement('div'); wrap.className = 'gallery-img-wrapper';
+        wrap.innerHTML = `<img src="${img.url}" alt="${img.title}" title="${img.title}">`;
+        grid.appendChild(wrap);
+      });
+    }
+
+    // Firebase Data Core Receivers
     onValue(creationsRef, (snapshot) => {
       allCreationsLocalArray = [];
-      if(snapshot.exists()) {
-        const cloudData = snapshot.val();
-        Object.keys(cloudData).reverse().forEach(key => {
-          allCreationsLocalArray.push(cloudData[key]);
-        });
-      }
+      if(snapshot.exists()) Object.keys(snapshot.val()).reverse().forEach(k => allCreationsLocalArray.push(snapshot.val()[k]));
       renderFeedGrid(allCreationsLocalArray);
     });
 
-    // Dashboard Instant Query Filter
-    document.getElementById('searchBar').addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase().trim();
-      const filtered = allCreationsLocalArray.filter(item => 
-        item.title.toLowerCase().includes(query) || item.type.toLowerCase().includes(query)
-      );
-      renderFeedGrid(filtered);
+    onValue(imagesRef, (snapshot) => {
+      allImagesLocalArray = [];
+      if(snapshot.exists()) Object.keys(snapshot.val()).reverse().forEach(k => allImagesLocalArray.push(snapshot.val()[k]));
+      renderImageGallery(allImagesLocalArray);
     });
 
-    // LAI Agent Pipeline Logic
-    const laiChatLog = document.getElementById('laiChatLog');
-    const laiQueryInput = document.getElementById('laiQueryInput');
-    const laiSubmitBtn = document.getElementById('laiSubmitBtn');
+    document.getElementById('gallerySearchField').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      renderImageGallery(allImagesLocalArray.filter(i => i.title.toLowerCase().includes(q)));
+    });
 
-    function triggerLaiAgentProcessing() {
-      const prompt = laiQueryInput.value.trim();
-      if (!prompt) return;
+    // ==========================================
+    //     LAI CORE GOOGLE GEMINI LINK INTEGRATION
+    // ==========================================
+    let localChatHistoryTrackingArray = JSON.parse(localStorage.getItem('lai_chats_history')) || [];
 
+    async function streamPromptToGeminiEngine(prompt) {
       appendLaiMessage(prompt, 'lai-user');
-      laiQueryInput.value = '';
+      saveChatToPersistentLogs(prompt, 'User');
 
-      const cleanString = prompt.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,"");
-      const tokens = cleanString.split(/\s+/);
-      const stopWords = ['what', 'is', 'the', 'a', 'an', 'and', 'or', 'in', 'on', 'at', 'to', 'for', 'find', 'me', 'look', 'through', 'articles', 'websites', 'lavant', 'browser', 'show', 'who', 'how', 'any', 'are', 'about'];
-      const keywords = tokens.filter(word => word.length > 2 && !stopWords.includes(word));
+      try {
+        const response = await fetch(GEMINI_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+        const data = await response.json();
+        const outputText = data.candidates[0].content.parts[0].text;
+        
+        appendLaiMessage(outputText, 'lai-bot');
+        saveChatToPersistentLogs(outputText, 'LAI Gemini Agent');
+      } catch (err) {
+        appendLaiMessage("Error fetching Gemini response data links.", 'lai-bot');
+      }
+    }
 
-      let optimalMatch = null;
-      let highestKeywordsFoundCount = 0;
+    function appendLaiMessage(text, className) {
+      const log = document.getElementById('laiChatLog');
+      const bubble = document.createElement('div'); bubble.className = `lai-msg ${className}`;
+      bubble.innerHTML = text; log.appendChild(bubble);
+      log.scrollTop = log.scrollHeight;
+    }
 
-      allCreationsLocalArray.forEach((artifact, index) => {
-        let textToSearch = (artifact.searchableText || artifact.title).toLowerCase();
-        let currentMatchScore = 0;
-        keywords.forEach(word => { if (textToSearch.includes(word)) currentMatchScore++; });
+    function saveChatToPersistentLogs(text, role) {
+      localChatHistoryTrackingArray.push({ timestamp: new Date().toLocaleTimeString(), role, text });
+      localStorage.setItem('lai_chats_history', JSON.stringify(localChatHistoryTrackingArray));
+      rebuildHistoryModalTrackingDOM();
+    }
 
-        if (currentMatchScore > highestKeywordsFoundCount) {
-          highestKeywordsFoundCount = currentMatchScore;
-          optimalMatch = { ...artifact, originalIndex: index };
-        }
+    function rebuildHistoryModalTrackingDOM() {
+      const container = document.getElementById('chatHistoryTrackingContainer'); container.innerHTML = '';
+      localChatHistoryTrackingArray.forEach(item => {
+        const row = document.createElement('div');
+        row.style.cssText = "background:#1e1512; padding:10px; border-radius:6px; border-left:2px solid #b5179e; font-size:13px;";
+        row.innerHTML = `<span style='color:var(--text-muted);'>[${item.timestamp}]</span> <strong>${item.role}:</strong> ${item.text}`;
+        container.appendChild(row);
+      });
+    }
+
+    document.getElementById('laiSubmitBtn').onclick = () => {
+      const el = document.getElementById('laiQueryInput'); if(el.value.trim()) { streamPromptToGeminiEngine(el.value.trim()); el.value = ''; }
+    };
+    rebuildHistoryModalTrackingDOM();
+
+    // ==========================================
+    //       ADVANCED SEARCH HUB INFRASTRUCTURE
+    // ==========================================
+    let localRecentSearchesArray = JSON.parse(localStorage.getItem('recent_searches')) || [];
+    const activeHubSearchField = document.getElementById('activeHubSearchField');
+
+    function executeSearchHubCompilation() {
+      rebuildRecentSearchesDOM();
+      triggerHubLiveSearchFilter();
+    }
+
+    function rebuildRecentSearchesDOM() {
+      const container = document.getElementById('recentSearchesLogList'); container.innerHTML = '';
+      localRecentSearchesArray.forEach(str => {
+        const row = document.createElement('div');
+        row.style.cssText = "padding:8px 12px; background:#261b16; border-radius:6px; font-size:13px; cursor:pointer; color:var(--text-muted);";
+        row.innerText = str;
+        row.onclick = () => { activeHubSearchField.value = str; triggerHubLiveSearchFilter(); };
+        container.appendChild(row);
+      });
+    }
+
+    async function triggerHubLiveSearchFilter() {
+      const query = activeHubSearchField.value.toLowerCase().trim();
+      const resultsGrid = document.getElementById('hubSearchResultsGrid');
+      const aiSummaryBox = document.getElementById('aiSummaryTopResultBox');
+      const suggestedContainer = document.getElementById('suggestedSearchesContainer');
+      
+      resultsGrid.innerHTML = '';
+      aiSummaryBox.innerHTML = '';
+      suggestedContainer.innerHTML = '';
+
+      if(!query) {
+        aiSummaryBox.style.display = 'none';
+        return;
+      }
+
+      // 1. Build Suggested Searches Matrix Dynamically
+      const sampleSuggestions = ["speed optimization tips", "how to build responsive layout", "lava studio project specs", "bootstrap boilerplate code"];
+      const filteredSuggestions = sampleSuggestions.filter(s => s.includes(query));
+      filteredSuggestions.forEach(s => {
+        const item = document.createElement('div'); item.className = 'suggested-item'; item.innerText = s;
+        item.onclick = () => { activeHubSearchField.value = s; triggerHubLiveSearchFilter(); commitSearchToStorageLog(s); };
+        suggestedContainer.appendChild(item);
       });
 
-      setTimeout(() => {
-        if (optimalMatch && highestKeywordsFoundCount > 0) {
-          const plainContextSample = optimalMatch.searchableText || optimalMatch.title;
-          const previewText = plainContextSample.length > 180 ? plainContextSample.substring(0, 180) + "..." : plainContextSample;
-
-          let aiResponse = `I crawled the Lava Studios database arrays using these targeted key vectors: <strong>[${keywords.join(', ')}]</strong>.<br><br>
-            I isolated an absolute statistical correlation inside the ${optimalMatch.type} node titled: <strong>"${optimalMatch.title}"</strong>.<br><br>
-            <strong>Extracted Target Summary:</strong> "${previewText}"`;
-          
-          appendLaiMessage(aiResponse, 'lai-bot', optimalMatch);
-        } else {
-          let fallbackMessage = `I indexed your parameter strings against database logs using token tracking: <strong>[${keywords.length > 0 ? keywords.join(', ') : 'No Assets Isolated'}]</strong>.<br><br>
-            No active nodes inside current Lavant documents or website templates match these specific criteria references. Deploy a creation to seed the logs!`;
-          appendLaiMessage(fallbackMessage, 'lai-bot');
-        }
-      }, 650);
-    }
-
-    function appendLaiMessage(text, className, sourceObj = null) {
-      const msg = document.createElement('div');
-      msg.className = `lai-msg ${className}`;
-      msg.innerHTML = text;
-
-      if (sourceObj) {
-        const link = document.createElement('div');
-        link.className = 'lai-source-link';
-        link.innerText = `🔥 Open Source Canvas View: "${sourceObj.title}" →`;
-        link.onclick = () => {
-          closeModal('laiModal');
-          launchViewer(sourceObj.title, sourceObj.type, sourceObj.originalIndex);
-        };
-        msg.appendChild(link);
+      // 2. Perform Keyword Search over Local Assets
+      const matchedAssets = allCreationsLocalArray.filter(item => (item.searchableText || item.title).toLowerCase().includes(query));
+      
+      // 3. Render Top AI Summary Layer Component Box
+      aiSummaryBox.style.display = 'block';
+      aiSummaryBox.innerHTML = `<div class='ai-summary-card'><h5 style='margin:0 0 8px 0; color:#ef4444;'>🤖 LAI Dynamic Engine Summary</h5><p id='hubLiveAiOutputText' style='margin:0; font-size:14px; line-height:1.5; color:#f3e8ff;'>Synthesizing Gemini context answers across current cluster node vectors...</p></div>`;
+      
+      // If direct document match discovered, append a functional quick shortcut button inside the AI results box
+      if (matchedAssets.length > 0) {
+        const exactAsset = matchedAssets[0];
+        const matchIndex = allCreationsLocalArray.indexOf(exactAsset);
+        const actionBtn = document.createElement('button');
+        actionBtn.className = 'btn-action'; actionBtn.style.cssText = "margin-top:12px; font-size:12px; padding:6px 14px;";
+        actionBtn.innerText = `Open Asset directly: "${exactAsset.title}" →`;
+        actionBtn.onclick = () => { closeScreen('searchHubScreen'); launchViewer(exactAsset.title, exactAsset.type, matchIndex); };
+        aiSummaryBox.querySelector('.ai-summary-card').appendChild(actionBtn);
       }
-      laiChatLog.appendChild(msg);
-      laiChatLog.scrollTop = laiChatLog.scrollHeight;
+
+      // Call Gemini API to generate the smart Google-like top search overview snippet dynamically
+      try {
+        const geminiResponse = await fetch(GEMINI_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contents: [{ parts: [{ text: `Give a brief, 2-sentence summary answering: "${query}" based on web contexts.` }] }] })
+        });
+        const geminiData = await geminiResponse.json();
+        document.getElementById('hubLiveAiOutputText').innerHTML = geminiData.candidates[0].content.parts[0].text;
+      } catch(e) {
+        document.getElementById('hubLiveAiOutputText').innerText = "AI summary engine offline.";
+      }
+
+      // 4. Render Remaining Search Results
+      matchedAssets.forEach(item => {
+        const matchIndex = allCreationsLocalArray.indexOf(item);
+        const card = document.createElement('div'); card.className = 'card';
+        card.onclick = () => { closeScreen('searchHubScreen'); launchViewer(item.title, item.type, matchIndex); };
+        card.innerHTML = `<div class="card-title">${item.title}</div><div class="card-type">${item.type}</div>`;
+        resultsGrid.appendChild(card);
+      });
     }
 
-    laiSubmitBtn.onclick = triggerLaiAgentProcessing;
-    laiQueryInput.onkeypress = (e) => { if(e.key === 'Enter') triggerLaiAgentProcessing(); };
+    function commitSearchToStorageLog(str) {
+      if(!str || localRecentSearchesArray.includes(str)) return;
+      localRecentSearchesArray.unshift(str);
+      if(localRecentSearchesArray.length > 7) localRecentSearchesArray.pop();
+      localStorage.setItem('recent_searches', JSON.stringify(localRecentSearchesArray));
+      rebuildRecentSearchesDOM();
+    }
+
+    activeHubSearchField.addEventListener('input', triggerHubLiveSearchFilter);
+    activeHubSearchField.addEventListener('keypress', (e) => {
+      if(e.key === 'Enter') { commitSearchToStorageLog(activeHubSearchField.value.trim()); }
+    });
   </script>
 </body>
 </html>
