@@ -54,7 +54,6 @@
     input[type="text"], textarea, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #542713; background: var(--bg-input); color: white; font-size: 14px; box-sizing: border-box; outline: none; }
     .btn-action { background: linear-gradient(135deg, #ff7300, #ff2a00); color: white; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
     
-    /* FIX: Explicitly separated and dimensioned frame views so layouts don't shrink */
     .preview-pane-container { flex: 1; display: flex; flex-direction: column; background: #fff; border-radius: 12px; overflow: hidden; border: 4px solid var(--bg-surface); height: 100%; min-height: 200px; }
     .preview-header-bar { background: #e2e8f0; color: #475569; padding: 8px 15px; font-size: 12px; font-weight: bold; }
     .preview-iframe { flex: 1; border: none; background: white; width: 100%; height: 100%; }
@@ -263,9 +262,9 @@
     let allCreationsLocalArray = [];
     let allImagesLocalArray = [];
 
-    // Corrected Google Gemini Base Integration Structure
+    // FIXED FOR AQ. KEYS: Key removed from URL parameter tracking string
     const GEMINI_API_KEY = "AQ.Ab8RN6JH4gU5gOJpzb-JN9mmANAURKvc9MLcZSKwz9RA-PEL3Q";
-    const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`;
 
     document.getElementById('openCreateModal').onclick = () => document.getElementById('createModal').style.display = 'flex';
     document.getElementById('openLaiModal').onclick = () => document.getElementById('laiModal').style.display = 'flex';
@@ -359,7 +358,7 @@
     });
 
     // ==========================================
-    //     FIXED GEMINI API TRANSMISSION WRAP
+    //     FIXED AUTHENTICATION HEADER MATRIX
     // ==========================================
     let localChatHistoryTrackingArray = JSON.parse(localStorage.getItem('lai_chats_history')) || [];
 
@@ -370,7 +369,10 @@
       try {
         const response = await fetch(GEMINI_ENDPOINT, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "x-goog-api-key": GEMINI_API_KEY
+          },
           body: JSON.stringify({
             contents: [{ parts: [{ text: prompt }] }]
           })
@@ -383,11 +385,11 @@
           appendLaiMessage(outputText, 'lai-bot');
           saveChatToPersistentLogs(outputText, 'LAI Gemini Agent');
         } else {
-          appendLaiMessage("Key validation verified, but payload configuration mismatch occurred.", 'lai-bot');
+          appendLaiMessage("Key structure validated, but unexpected data array response received.", 'lai-bot');
         }
       } catch (err) {
         console.error(err);
-        appendLaiMessage("API request link block complete. Verify system connectivity.", 'lai-bot');
+        appendLaiMessage("Connection pipeline tracking lost. Please verify local configuration.", 'lai-bot');
       }
     }
 
@@ -485,7 +487,10 @@
       try {
         const geminiResponse = await fetch(GEMINI_ENDPOINT, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "x-goog-api-key": GEMINI_API_KEY
+          },
           body: JSON.stringify({ contents: [{ parts: [{ text: `Provide a quick, concise 2-sentence response explaining: "${query}"` }] }] })
         });
         const geminiData = await geminiResponse.json();
